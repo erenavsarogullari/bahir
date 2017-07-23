@@ -19,7 +19,7 @@ package org.apache.spark.streaming.hazelcast
 
 import java.util.Properties
 
-import com.hazelcast.core._
+import com.hazelcast.core.{EntryListener, _}
 import com.hazelcast.map.listener._
 import com.hazelcast.query.Predicate
 
@@ -30,7 +30,7 @@ import org.apache.spark.streaming.hazelcast.DistributedEventType.DistributedEven
 import org.apache.spark.streaming.hazelcast.validator.SparkHazelcastValidator
 import org.apache.spark.streaming.receiver.Receiver
 
-class HazelcastPairInputDStream[K, V](ssc: StreamingContext,
+private[hazelcast] class HazelcastPairInputDStream[K, V](ssc: StreamingContext,
                                        storageLevel: StorageLevel,
                                        properties: Properties,
                                        distributedEventTypes: Set[DistributedEventType],
@@ -149,43 +149,13 @@ private class HazelcastPairReceiver[K, V](storageLevel: StorageLevel,
 
   }
 
-  private class HazelcastInputDStreamEntryListener[K, V](
-            receiver: HazelcastPairReceiver[K, V], distributedEventTypes: Set[DistributedEventType])
-    extends EntryListener[K, V] {
-
-    override def entryAdded(event: EntryEvent[K, V]) {
-      store(event)
-    }
-
-    override def entryRemoved(event: EntryEvent[K, V]) {
-      store(event)
-    }
-
-    override def entryUpdated(event: EntryEvent[K, V]) {
-      store(event)
-    }
-
-    override def entryEvicted(event: EntryEvent[K, V]) {
-      store(event)
-    }
-
-    override def mapEvicted(event: MapEvent): Unit = {
-    }
-
-    override def mapCleared(event: MapEvent): Unit = {
-    }
-
-    private def store(event: EntryEvent[K, V]) {
-      if (distributedEventTypes.contains(DistributedEventType.withName(event.getEventType.name())
-      )) {
-        receiver.store((event.getMember.getAddress.toString,
-          event.getEventType.name(),
-          event.getKey,
-          event.getOldValue,
-          event.getValue))
-      }
-    }
-
+  private class HazelcastInputDStreamEntryListener[K, V](receiver: HazelcastPairReceiver[K, V],
+                                                         distributedEventTypes:
+                                                         Set[DistributedEventType]) extends
+    HazelcastInputDStreamMapListener[K, V](receiver, distributedEventTypes) with
+    EntryListener[K, V] {
+    override def mapEvicted(mapEvent: MapEvent): Unit = {}
+    override def mapCleared(mapEvent: MapEvent): Unit = {}
   }
 
 }

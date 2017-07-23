@@ -17,7 +17,7 @@
 
 package org.apache.spark.streaming.hazelcast
 
-object DistributedEventType extends Enumeration {
+private[hazelcast] object DistributedEventType extends Enumeration {
   type DistributedEventType = Value
   val ADDED, REMOVED, UPDATED, EVICTED = Value
 }

@@ -28,7 +28,7 @@ import org.apache.spark.streaming.hazelcast.DistributedEventType.DistributedEven
 import org.apache.spark.streaming.hazelcast.validator.SparkHazelcastValidator
 import org.apache.spark.streaming.receiver.Receiver
 
-class HazelcastInputDStream[T](ssc: StreamingContext,
+private[hazelcast] class HazelcastInputDStream[T](ssc: StreamingContext,
                                storageLevel: StorageLevel,
                                properties: Properties,
                                distributedEventTypes: Set[DistributedEventType])

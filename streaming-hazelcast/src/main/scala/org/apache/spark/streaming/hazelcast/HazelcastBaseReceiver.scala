@@ -23,7 +23,7 @@ import com.hazelcast.core.DistributedObject
 
 import org.apache.spark.streaming.hazelcast.config.SparkHazelcastService
 
-trait HazelcastBaseReceiver {
+private[hazelcast] trait HazelcastBaseReceiver {
 
   protected val props: Properties
 
