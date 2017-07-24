@@ -23,14 +23,11 @@ import com.hazelcast.config.ClasspathXmlConfig
 import com.hazelcast.core._
 
 import org.apache.spark.streaming.hazelcast.DistributedObjectType
-import org.apache.spark.streaming.hazelcast.validator.SparkHazelcastValidator
 import org.apache.spark.streaming.hazelcast.DistributedObjectType.DistributedObjectType
+import org.apache.spark.streaming.hazelcast.SparkHazelcastConstants._
+import org.apache.spark.streaming.hazelcast.validator.SparkHazelcastValidator
 
 private[hazelcast] object SparkHazelcastService {
-
-  val HazelcastXMLConfigFileName = "hazelcast.xml.config.file.name"
-  val HazelcastDistributedObjectName = "hazelcast.distributed.object.name"
-  val HazelcastDistributedObjectType = "hazelcast.distributed.object.type"
 
   def getDistributedObject(properties: Properties): DistributedObject = {
     SparkHazelcastValidator.validateProperties(properties)

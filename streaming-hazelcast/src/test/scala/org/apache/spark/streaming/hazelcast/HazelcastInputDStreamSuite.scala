@@ -85,7 +85,8 @@ class HazelcastInputDStreamSuite extends SparkHazelcastSuite with BeforeAndAfter
     })
   }
 
-  class HazelcastItemLoader[T](properties: Properties, expectedList: List[T]) extends Runnable {
+  private class HazelcastItemLoader[T](properties: Properties, expectedList: List[T])
+    extends Runnable {
 
     override def run(): Unit = {
       val distributedObject = SparkHazelcastService.getDistributedObject(properties)

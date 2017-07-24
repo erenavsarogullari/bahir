@@ -17,4 +17,4 @@
 
 package org.apache.spark.streaming.hazelcast
 
-case class User(id: Int, name: String, surname: String)
+private[hazelcast] case class User(id: Int, name: String, surname: String)

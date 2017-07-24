@@ -25,9 +25,9 @@ import scala.reflect.ClassTag
 import org.apache.spark.SparkContext
 import org.apache.spark.rdd.RDD
 import org.apache.spark.streaming.hazelcast.DistributedObjectType.DistributedObjectType
-import org.apache.spark.streaming.hazelcast.config.SparkHazelcastService._
+import org.apache.spark.streaming.hazelcast.SparkHazelcastConstants._
 
-object SparkHazelcastSuiteUtils {
+private[hazelcast] object SparkHazelcastSuiteUtils {
 
   val HazelcastXMLFileName = "hazelcast_test_config.xml"
 

@@ -25,9 +25,9 @@ import com.hazelcast.core.{Hazelcast, IList}
 import org.apache.spark.{SparkConf, SparkContext}
 import org.apache.spark.storage.StorageLevel
 import org.apache.spark.streaming.{Seconds, StreamingContext}
-import org.apache.spark.streaming.hazelcast.config.SparkHazelcastService._
+import org.apache.spark.streaming.hazelcast.SparkHazelcastConstants._
 
-object WriteDistributedItemToDStream {
+private object WriteDistributedItemToDStream {
 
   val HazelcastXMLFileName = "hazelcast_config.xml"
   val HazelcastDistributedListName = "test_distributed_list"

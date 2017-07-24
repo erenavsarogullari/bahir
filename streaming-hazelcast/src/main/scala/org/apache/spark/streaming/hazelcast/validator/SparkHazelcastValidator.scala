@@ -23,10 +23,10 @@ import com.hazelcast.config.ClasspathXmlConfig
 import com.hazelcast.core._
 import org.apache.commons.lang3.Validate
 
-import org.apache.spark.streaming.hazelcast.config.SparkHazelcastService._
 import org.apache.spark.streaming.hazelcast.DistributedEventType
 import org.apache.spark.streaming.hazelcast.DistributedEventType.DistributedEventType
 import org.apache.spark.streaming.hazelcast.DistributedObjectType.DistributedObjectType
+import org.apache.spark.streaming.hazelcast.SparkHazelcastConstants._
 
 private[hazelcast] object SparkHazelcastValidator {
 
@@ -42,13 +42,13 @@ private[hazelcast] object SparkHazelcastValidator {
 
   def validateProperties(properties: Properties) {
     Validate.notBlank(properties.getProperty(HazelcastXMLConfigFileName),
-      "'hazelcast.xml.config.file.name' property can not be blank.")
+      s"'$HazelcastXMLConfigFileName' property can not be blank.")
     Validate.notNull(new ClasspathXmlConfig(properties.getProperty(HazelcastXMLConfigFileName)),
-      "'hazelcast.xml.config.file.name' property can not be null.")
-    Validate.notBlank(properties.getProperty(HazelcastDistributedObjectName)
-      , "'hazelcast.distributed.object.name' property can not be blank.")
+      s"'$HazelcastXMLConfigFileName' property can not be null.")
+    Validate.notBlank(properties.getProperty(HazelcastDistributedObjectName),
+      s"'$HazelcastDistributedObjectName' property can not be blank.")
     if (!properties.get(HazelcastDistributedObjectType).isInstanceOf[DistributedObjectType]) {
-      throw new IllegalArgumentException("'hazelcast.distributed.object.type' property must be " +
+      throw new IllegalArgumentException(s"'$HazelcastDistributedObjectType' property must be " +
         "instanceOf DistributedObjectType")
     }
   }
@@ -89,15 +89,16 @@ private[hazelcast] object SparkHazelcastValidator {
   private def checkDistributedEventTypes(distributedEventTypes: Set[DistributedEventType],
                                          supportedDistributedEventTypes: Set[DistributedEventType])
   {
+    val supportedDistributedEventTypesAsString = supportedDistributedEventTypes.mkString(", ")
     Validate.notEmpty(distributedEventTypes.toArray, "'distributedEventTypes' can not be empty. " +
-      s"Supported values: [${supportedDistributedEventTypes.mkString(", ")}]")
+      s"Supported values: [$supportedDistributedEventTypesAsString]")
     Validate.noNullElements(distributedEventTypes.toArray, "'distributedEventTypes' can not " +
       "contain null element.")
 
     distributedEventTypes.foreach(eventType => {
       if (!supportedDistributedEventTypes.contains(eventType)) {
         throw new IllegalArgumentException(s"Expected Distributed Event Types: " +
-          s"[${supportedDistributedEventTypes.mkString(", ")}] but $eventType found!")
+          s"[$supportedDistributedEventTypesAsString] but $eventType found!")
       }
     })
   }

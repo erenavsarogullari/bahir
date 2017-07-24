@@ -29,6 +29,7 @@
   <artifactId>spark-streaming-hazelcast_2.11</artifactId>
   <properties>
     <sbt.project.name>streaming-hazelcast</sbt.project.name>
+    <hazelcast.version>3.8.3</hazelcast.version>
   </properties>
   <packaging>jar</packaging>
   <name>Apache Bahir - Spark Streaming Hazelcast</name>
@@ -53,14 +54,9 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-lang3</artifactId>
-      <version>3.5</version>
-    </dependency>
-    <dependency>
       <groupId>com.hazelcast</groupId>
       <artifactId>hazelcast</artifactId>
-      <version>3.8.3</version>
+      <version>${hazelcast.version}</version>
     </dependency>
     <dependency>
       <groupId>org.scalacheck</groupId>

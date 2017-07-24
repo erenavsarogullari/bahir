@@ -15,32 +15,12 @@
  * limitations under the License.
  */
 
-package org.apache.spark.streaming.hazelcast.util
+package org.apache.spark.streaming.hazelcast
 
-import org.apache.spark.{SparkConf, SparkContext, SparkFunSuite}
-import org.apache.spark.streaming.{Seconds, StreamingContext}
+object SparkHazelcastConstants {
 
-private[hazelcast] trait SparkHazelcastSuite extends SparkFunSuite {
-
-  private lazy val sparkConf = new SparkConf().setAppName("spark-hazelcast").setMaster("local[2]")
-  protected var sc: SparkContext = _
-  protected var ssc: StreamingContext = _
-
-  protected def startSparkContext() {
-    sc = new SparkContext(sparkConf)
-  }
-
-  protected def stopSparkContext() {
-    sc.stop()
-  }
-
-  protected def startStreamingContext() {
-    sc = new SparkContext(sparkConf)
-    ssc = new StreamingContext(sc, Seconds(1))
-  }
-
-  protected def stopStreamingContext() {
-    ssc.stop()
-  }
+  val HazelcastXMLConfigFileName = "hazelcast.xml.config.file.name"
+  val HazelcastDistributedObjectName = "hazelcast.distributed.object.name"
+  val HazelcastDistributedObjectType = "hazelcast.distributed.object.type"
 
 }

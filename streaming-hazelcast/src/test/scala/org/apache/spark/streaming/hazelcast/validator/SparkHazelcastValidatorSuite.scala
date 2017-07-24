@@ -24,11 +24,11 @@ import com.hazelcast.core.{Hazelcast, HazelcastInstance}
 
 import org.apache.spark.SparkFunSuite
 import org.apache.spark.streaming.hazelcast.DistributedEventType
-import org.apache.spark.streaming.hazelcast.config.SparkHazelcastService._
+import org.apache.spark.streaming.hazelcast.SparkHazelcastConstants._
 
 class SparkHazelcastValidatorSuite extends SparkFunSuite {
 
-  var hazelcastInstance: HazelcastInstance = _
+  private var hazelcastInstance: HazelcastInstance = _
 
   override def beforeAll() {
     hazelcastInstance = Hazelcast.getOrCreateHazelcastInstance(
@@ -47,7 +47,7 @@ class SparkHazelcastValidatorSuite extends SparkFunSuite {
       SparkHazelcastValidator.validateProperties(properties)
     }
 
-    assert(ex.getMessage == "'hazelcast.xml.config.file.name' property can not be blank.")
+    assert(ex.getMessage == s"'$HazelcastXMLConfigFileName' property can not be blank.")
   }
 
   test("Validate 'hazelcast.xml.config.file.name' property when it is set as non-existent file.") {
@@ -71,7 +71,7 @@ class SparkHazelcastValidatorSuite extends SparkFunSuite {
       SparkHazelcastValidator.validateProperties(properties)
     }
 
-    assert(ex.getMessage == "'hazelcast.distributed.object.name' property can not be blank.")
+    assert(ex.getMessage == s"'$HazelcastDistributedObjectName' property can not be blank.")
   }
 
   test("Validate properties when 'hazelcast.distributed.object.type' property is set as empty.") {
@@ -85,22 +85,7 @@ class SparkHazelcastValidatorSuite extends SparkFunSuite {
     }
 
     assert(ex.getMessage ==
-            "'hazelcast.distributed.object.type' property must be instanceOf DistributedObjectType")
-  }
-
-  test("Validate partition count when 'hazelcast.distributed.object.type' property is set " +
-                                                                                      "as empty.") {
-    val properties = new Properties()
-    properties.put(HazelcastXMLConfigFileName, "hazelcast_test_config.xml")
-    properties.put(HazelcastDistributedObjectName, "test_distributed_map")
-    properties.put(HazelcastDistributedObjectType, "")
-
-    val ex = intercept[IllegalArgumentException] {
-      SparkHazelcastValidator.validateProperties(properties)
-    }
-
-    assert(ex.getMessage == "'hazelcast.distributed.object.type' property must be instanceOf " +
-                                                                            "DistributedObjectType")
+            s"'$HazelcastDistributedObjectType' property must be instanceOf DistributedObjectType")
   }
 
   test("Validate DistributedEventTypes for Map Structure when distributed object type " +
