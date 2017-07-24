@@ -106,14 +106,14 @@ class HazelcastPairInputDStreamSuite extends SparkHazelcastSuite with BeforeAndA
             hzMap.put(tuple._1, tuple._2)
             hzMap.put(tuple._1, tuple._2)
             hzMap.remove(tuple._1)
-            Thread.sleep(1000)
+            Thread.sleep(BatchDuration)
           })
 
         case multiMap: MultiMap[Int, String] =>
           expectedTupleList.foreach(tuple => {
             multiMap.put(tuple._1, tuple._2)
             multiMap.remove(tuple._1)
-            Thread.sleep(1000)
+            Thread.sleep(BatchDuration)
           })
 
         case replicatedMap: ReplicatedMap[Int, String] =>
@@ -121,7 +121,7 @@ class HazelcastPairInputDStreamSuite extends SparkHazelcastSuite with BeforeAndA
             replicatedMap.put(tuple._1, tuple._2)
             replicatedMap.put(tuple._1, tuple._2)
             replicatedMap.remove(tuple._1)
-            Thread.sleep(1000)
+            Thread.sleep(BatchDuration)
           })
 
         case distObj: Any => fail(s"Expected Distributed Object Types: " +

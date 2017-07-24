@@ -18,11 +18,12 @@
 package org.apache.spark.streaming.hazelcast.util
 
 import org.apache.spark.{SparkConf, SparkContext, SparkFunSuite}
-import org.apache.spark.streaming.{Seconds, StreamingContext}
+import org.apache.spark.streaming.{Milliseconds, StreamingContext}
 
 private[hazelcast] trait SparkHazelcastSuite extends SparkFunSuite {
 
   private lazy val sparkConf = new SparkConf().setAppName("spark-hazelcast").setMaster("local[2]")
+  protected val BatchDuration = 10
   protected var sc: SparkContext = _
   protected var ssc: StreamingContext = _
 
@@ -36,7 +37,7 @@ private[hazelcast] trait SparkHazelcastSuite extends SparkFunSuite {
 
   protected def startStreamingContext() {
     sc = new SparkContext(sparkConf)
-    ssc = new StreamingContext(sc, Seconds(1))
+    ssc = new StreamingContext(sc, Milliseconds(BatchDuration))
   }
 
   protected def stopStreamingContext() {

@@ -92,7 +92,7 @@ class HazelcastMessageInputDStreamSuite extends SparkHazelcastSuite with BeforeA
         case hzTopic: ITopic[T] =>
           expectedList.foreach(message => {
             hzTopic.publish(message)
-            Thread.sleep(1000)
+            Thread.sleep(BatchDuration)
           })
 
         case distObj: Any => fail(s"Expected Distributed Object Types : [ITopic] " +

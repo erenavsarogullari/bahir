@@ -19,11 +19,6 @@ package org.apache.spark.streaming.hazelcast.util
 
 import java.util.Properties
 
-import scala.collection.mutable.Queue
-import scala.reflect.ClassTag
-
-import org.apache.spark.SparkContext
-import org.apache.spark.rdd.RDD
 import org.apache.spark.streaming.hazelcast.DistributedObjectType.DistributedObjectType
 import org.apache.spark.streaming.hazelcast.SparkHazelcastConstants._
 
@@ -43,17 +38,6 @@ private[hazelcast] object SparkHazelcastSuiteUtils {
     properties.put(HazelcastDistributedObjectName, distributedObjectName)
     properties.put(HazelcastDistributedObjectType, distributedObjectType)
     properties
-  }
-
-  def createRDDQueue[T: ClassTag](sc: SparkContext, expectedList: List[T]): Queue[RDD[T]] = {
-    val rddQueue: Queue[RDD[T]] = Queue()
-    val tempExpectedBuffer = expectedList.toBuffer
-    for (i <- 1 to (expectedList.size / 2)) {
-      val intRDD = sc.parallelize[T](tempExpectedBuffer.take(2))
-      rddQueue += intRDD
-      tempExpectedBuffer.remove(0, 2)
-    }
-    rddQueue
   }
 
 }

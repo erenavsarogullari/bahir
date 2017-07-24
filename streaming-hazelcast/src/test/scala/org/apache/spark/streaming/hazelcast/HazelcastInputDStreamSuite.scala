@@ -102,7 +102,7 @@ class HazelcastInputDStreamSuite extends SparkHazelcastSuite with BeforeAndAfter
     private def addItems(hzCollection: ICollection[T], expectedList: List[T]): Unit = {
       expectedList.foreach(item => {
         hzCollection.add(item)
-        Thread.sleep(1000)
+        Thread.sleep(BatchDuration)
       })
     }
 
