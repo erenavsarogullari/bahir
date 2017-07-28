@@ -47,7 +47,7 @@ private class HazelcastReceiver[T](storageLevel: StorageLevel,
 
   override protected val props: Properties = properties
 
-  SparkHazelcastValidator.validateDistributedEventTypes[T](distributedObject, distributedEventTypes)
+  SparkHazelcastValidator.validateDistributedEventTypes(distributedObject, distributedEventTypes)
 
   override def onStart() {
     start()

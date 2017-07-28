@@ -56,7 +56,7 @@ private class HazelcastPairReceiver[K, V](storageLevel: StorageLevel,
 
   override protected val props: Properties = properties
 
-  SparkHazelcastValidator.validateDistributedEventTypesOfMap[K, V](distributedObject,
+  SparkHazelcastValidator.validateDistributedEventTypesOfMap(distributedObject,
                                                                    distributedEventTypes)
 
   override def onStart() {

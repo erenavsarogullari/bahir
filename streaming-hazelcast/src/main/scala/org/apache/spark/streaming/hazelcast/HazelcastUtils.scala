@@ -29,8 +29,7 @@ object HazelcastUtils {
 
   /**
     * Create an input stream that receives messages by registering event listener.
-    * {@link com.hazelcast.core.IMap}, {@link com.hazelcast.core.MultiMap} and
-    * {@link com.hazelcast.core.ReplicatedMap} are supported distributed data structures.
+    * IMap, MultiMap and ReplicatedMap are supported distributed data structures.
     *
     * This Receiver will start to receive the message arrived after the listener registered.
     *
@@ -61,8 +60,7 @@ object HazelcastUtils {
 
   /**
     * Create an input stream that receives messages by registering item listener.
-    * {@link com.hazelcast.core.IList}, {@link com.hazelcast.core.ISet} and
-    * {@link com.hazelcast.core.IQueue} are supported distributed data structures.
+    * IList, ISet and IQueue are supported distributed data structures.
     *
     * This Receiver will start to receive the message arrived after the listener registered.
     *
@@ -84,7 +82,7 @@ object HazelcastUtils {
 
   /**
     * Create an input stream that receives messages by registering item listener.
-    * {@link com.hazelcast.core.ITopic} is supported distributed data structures.
+    * ITopic is supported distributed data structures.
     *
     * This Receiver will start to receive the message arrived after the listener registered.
     *

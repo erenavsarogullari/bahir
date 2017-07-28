@@ -53,33 +53,33 @@ private[hazelcast] object SparkHazelcastValidator {
     }
   }
 
-  def validateDistributedEventTypesOfMap[K, V](distributedObject: DistributedObject,
-                                               distributedEventTypes: Set[DistributedEventType]) {
+  def validateDistributedEventTypesOfMap
+  (distributedObject: DistributedObject, distributedEventTypes: Set[DistributedEventType]) {
     distributedObject match {
-      case hzMap: IMap[K@unchecked, V@unchecked] =>
+      case hzMap: IMap[_, _] =>
         checkDistributedEventTypes(distributedEventTypes, supportedDistributedEventTypesOfMaps)
-      case multiMap: MultiMap[K@unchecked, V@unchecked] =>
+      case multiMap: MultiMap[_, _] =>
         checkDistributedEventTypes(distributedEventTypes, supportedDistributedEventTypesOfMaps)
-      case replicatedMap: ReplicatedMap[K@unchecked, V@unchecked] =>
+      case replicatedMap: ReplicatedMap[_, _] =>
         checkDistributedEventTypes(distributedEventTypes, supportedDistributedEventTypesOfMaps)
       case distObj: Any => throw new IllegalStateException(s"Expected Distributed Object Types : " +
         s"[IMap, MultiMap and ReplicatedMap] but ${distObj.getName} found!")
     }
   }
 
-  def validateDistributedEventTypes[T](distributedObject: DistributedObject,
-                                       distributedEventTypes: Set[DistributedEventType]) {
+  def validateDistributedEventTypes(distributedObject: DistributedObject,
+                                       distributedEventTypes: Set[DistributedEventType]) : Unit = {
     distributedObject match {
-      case hzList: IList[T@unchecked] =>
+      case hzList: IList[_] =>
         checkDistributedEventTypes(distributedEventTypes, supportedDistributedEventTypes)
 
-      case hzSet: ISet[T@unchecked] =>
+      case hzSet: ISet[_] =>
         checkDistributedEventTypes(distributedEventTypes, supportedDistributedEventTypes)
 
-      case hzQueue: IQueue[T@unchecked] =>
+      case hzQueue: IQueue[_] =>
         checkDistributedEventTypes(distributedEventTypes, supportedDistributedEventTypes)
 
-      case hzQueue: ITopic[T@unchecked] =>
+      case hzQueue: ITopic[_] =>
 
       case distObj: Any => throw new IllegalStateException(s"Expected Distributed Object Types : " +
         s"[IList, ISet and IQueue] but ${distObj.getName} found!")
