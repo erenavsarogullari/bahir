@@ -86,7 +86,7 @@ private[hazelcast] object SparkHazelcastValidator {
     }
   }
 
-  private def checkDistributedEventTypes(distributedEventTypes: Set[DistributedEventType],
+  def checkDistributedEventTypes(distributedEventTypes: Set[DistributedEventType],
                                          supportedDistributedEventTypes: Set[DistributedEventType])
   {
     val supportedDistributedEventTypesAsString = supportedDistributedEventTypes.mkString(", ")
