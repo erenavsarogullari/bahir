@@ -41,15 +41,15 @@ class HazelcastPairInputDStreamSuite extends SparkHazelcastSuite with BeforeAndA
     stopStreamingContext()
   }
 
-  test("A Distributed List having 10 integers should be written to Spark as DStream") {
+  test("A Distributed Map having 10 integers should be written to Spark as DStream") {
     test(DistributedObjectType.IMap, "test_distributed_map4", 10)
   }
 
-  test("A Distributed Set having 15 integers should be written to Spark as DStream") {
+  test("A MultiMap having 15 integers should be written to Spark as DStream") {
     test(DistributedObjectType.MultiMap, "test_distributed_multiMap4", 15)
   }
 
-  test("A Distributed Queue having 20 integers should be written to Spark as DStream") {
+  test("A ReplicatedMap having 20 integers should be written to Spark as DStream") {
     test(DistributedObjectType.ReplicatedMap, "test_distributed_replicatedMap4", 20)
   }
 
@@ -85,12 +85,13 @@ class HazelcastPairInputDStreamSuite extends SparkHazelcastSuite with BeforeAndA
                            distributedEventTypes: Set[DistributedEventType] = Set
                            (DistributedEventType.ADDED)) {
     hazelcastEntryStream.foreachRDD(rdd => {
-      rdd.collect().foreach(tuple => {
-        assert(StringUtils.isNotBlank(tuple._1))
-        assert(StringUtils.isNotBlank(tuple._2))
-        assert(distributedEventTypes.contains(DistributedEventType.withName(tuple._2)))
-        assert(expectedTupleList.contains((tuple._3, tuple._5)))
-      })
+      rdd.collect().foreach {
+        case(memberAddress, eventType, key, oldValue, value) =>
+          assert(StringUtils.isNotBlank(memberAddress))
+          assert(StringUtils.isNotBlank(eventType))
+          assert(distributedEventTypes.contains(DistributedEventType.withName(eventType)))
+          assert(expectedTupleList.contains((key, value)))
+      }
       latch.countDown()
     })
   }
@@ -102,27 +103,30 @@ class HazelcastPairInputDStreamSuite extends SparkHazelcastSuite with BeforeAndA
       val distributedObject = SparkHazelcastService.getDistributedObject(properties)
       distributedObject match {
         case hzMap: IMap[Int, String] =>
-          expectedTupleList.foreach(tuple => {
-            hzMap.put(tuple._1, tuple._2)
-            hzMap.put(tuple._1, tuple._2)
-            hzMap.remove(tuple._1)
-            Thread.sleep(BatchDuration)
-          })
+          expectedTupleList.foreach {
+            case (key, value) =>
+              hzMap.put(key, value)
+              hzMap.put(key, value)
+              hzMap.remove(key)
+              Thread.sleep(BatchDuration)
+          }
 
         case multiMap: MultiMap[Int, String] =>
-          expectedTupleList.foreach(tuple => {
-            multiMap.put(tuple._1, tuple._2)
-            multiMap.remove(tuple._1)
-            Thread.sleep(BatchDuration)
-          })
+          expectedTupleList.foreach {
+            case (key, value) =>
+                multiMap.put(key, value)
+                multiMap.remove(key)
+                Thread.sleep(BatchDuration)
+          }
 
         case replicatedMap: ReplicatedMap[Int, String] =>
-          expectedTupleList.foreach(tuple => {
-            replicatedMap.put(tuple._1, tuple._2)
-            replicatedMap.put(tuple._1, tuple._2)
-            replicatedMap.remove(tuple._1)
-            Thread.sleep(BatchDuration)
-          })
+          expectedTupleList.foreach {
+            case (key, value) =>
+              replicatedMap.put(key, value)
+              replicatedMap.put(key, value)
+              replicatedMap.remove(key)
+              Thread.sleep(BatchDuration)
+          }
 
         case distObj: Any => fail(s"Expected Distributed Object Types: " +
                               s"[IMap, MultiMap and ReplicatedMap] but ${distObj.getName} found!")

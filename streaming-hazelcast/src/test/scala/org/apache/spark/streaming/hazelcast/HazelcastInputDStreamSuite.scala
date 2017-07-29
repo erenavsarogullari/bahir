@@ -76,11 +76,12 @@ class HazelcastInputDStreamSuite extends SparkHazelcastSuite with BeforeAndAfter
   private def verify[T](hazelcastItemStream: HazelcastInputDStream[T], expectedList: List[T],
                         latch: CountDownLatch): Unit = {
     hazelcastItemStream.foreachRDD(rdd => {
-      rdd.collect().foreach(tuple => {
-        assert(StringUtils.isNotBlank(tuple._1))
-        assert(StringUtils.isNotBlank(tuple._2))
-        assert(expectedList.contains(tuple._3))
-      })
+      rdd.collect().foreach {
+        case(memberAddress, eventType, item) =>
+        assert(StringUtils.isNotBlank(memberAddress))
+        assert(StringUtils.isNotBlank(eventType))
+        assert(expectedList.contains(item))
+      }
       latch.countDown()
     })
   }

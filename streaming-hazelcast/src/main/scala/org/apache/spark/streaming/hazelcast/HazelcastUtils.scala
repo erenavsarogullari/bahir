@@ -27,7 +27,7 @@ import org.apache.spark.streaming.hazelcast.DistributedEventType.DistributedEven
 
 object HazelcastUtils {
 
-  /**
+   /**
     * Create an input stream that receives messages by registering event listener.
     * IMap, MultiMap and ReplicatedMap are supported distributed data structures.
     *
@@ -45,50 +45,50 @@ object HazelcastUtils {
                                        storageLevel: StorageLevel = StorageLevel.MEMORY_ONLY,
                                        properties: Properties,
                                        distributedEventTypes: Set[DistributedEventType]
-                                        = Set(DistributedEventType.ADDED),
+                                       = Set(DistributedEventType.ADDED),
                                        predicate: Option[Predicate[K, V]] = None,
                                        key: Option[K] = None): HazelcastPairInputDStream[K, V] = {
 
     new HazelcastPairInputDStream[K, V](ssc,
-                                          storageLevel,
-                                          properties,
-                                          distributedEventTypes,
-                                          predicate,
-                                          key)
+      storageLevel,
+      properties,
+      distributedEventTypes,
+      predicate,
+      key)
 
   }
 
-  /**
+   /**
     * Create an input stream that receives messages by registering item listener.
     * IList, ISet and IQueue are supported distributed data structures.
     *
     * This Receiver will start to receive the message arrived after the listener registered.
     *
-    * @param ssc                    StreamingContext object
-    * @param storageLevel           RDD storage level. Default: StorageLevel.MEMORY_ONLY.
-    * @param properties             Hazelcast Properties
-    * @param distributedEventTypes  Distributed Event Types to listen. Optional. Default: ADDED.
+    * @param ssc                   StreamingContext object
+    * @param storageLevel          RDD storage level. Default: StorageLevel.MEMORY_ONLY.
+    * @param properties            Hazelcast Properties
+    * @param distributedEventTypes Distributed Event Types to listen. Optional. Default: ADDED.
     * @return HazelcastInputDStream instance
     */
   def createHazelcastItemStream[T](ssc: StreamingContext,
                                    storageLevel: StorageLevel = StorageLevel.MEMORY_ONLY,
                                    properties: Properties,
                                    distributedEventTypes: Set[DistributedEventType]
-                                   = Set(DistributedEventType.ADDED)) : HazelcastInputDStream[T] = {
+                                   = Set(DistributedEventType.ADDED)): HazelcastInputDStream[T] = {
 
     new HazelcastInputDStream[T](ssc, storageLevel, properties, distributedEventTypes)
 
   }
 
-  /**
+   /**
     * Create an input stream that receives messages by registering item listener.
     * ITopic is supported distributed data structures.
     *
     * This Receiver will start to receive the message arrived after the listener registered.
     *
-    * @param ssc                    StreamingContext object
-    * @param storageLevel           RDD storage level. Default: StorageLevel.MEMORY_ONLY.
-    * @param properties             Hazelcast Properties
+    * @param ssc          StreamingContext object
+    * @param storageLevel RDD storage level. Default: StorageLevel.MEMORY_ONLY.
+    * @param properties   Hazelcast Properties
     * @return HazelcastInputDStream instance
     */
   def createHazelcastMessageStream[T](ssc: StreamingContext,
