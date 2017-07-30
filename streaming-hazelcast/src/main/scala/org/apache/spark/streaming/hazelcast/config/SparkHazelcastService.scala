@@ -19,7 +19,7 @@ package org.apache.spark.streaming.hazelcast.config
 
 import java.util.Properties
 
-import com.hazelcast.config.ClasspathXmlConfig
+import com.hazelcast.config.FileSystemXmlConfig
 import com.hazelcast.core._
 
 import org.apache.spark.streaming.hazelcast.DistributedObjectType
@@ -37,8 +37,8 @@ private[hazelcast] object SparkHazelcastService {
     val hazelcastDistributedObjectType = properties.get(HazelcastDistributedObjectType)
                                                                 .asInstanceOf[DistributedObjectType]
 
-    val hazelcastInstance = Hazelcast.getOrCreateHazelcastInstance(
-                                                new ClasspathXmlConfig(hazelcastXMLConfigFileName))
+    val config = new FileSystemXmlConfig(hazelcastXMLConfigFileName)
+    val hazelcastInstance = Hazelcast.getOrCreateHazelcastInstance(config)
 
     getDistributedObject(hazelcastInstance,
                           hazelcastDistributedObjectType,

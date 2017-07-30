@@ -19,7 +19,7 @@ package org.apache.spark.streaming.hazelcast.validator
 
 import java.util.Properties
 
-import com.hazelcast.config.ClasspathXmlConfig
+import com.hazelcast.config.FileSystemXmlConfig
 import com.hazelcast.core._
 import org.apache.commons.lang3.Validate
 
@@ -43,7 +43,7 @@ private[hazelcast] object SparkHazelcastValidator {
   def validateProperties(properties: Properties) {
     Validate.notBlank(properties.getProperty(HazelcastXMLConfigFileName),
       s"'$HazelcastXMLConfigFileName' property can not be blank.")
-    Validate.notNull(new ClasspathXmlConfig(properties.getProperty(HazelcastXMLConfigFileName)),
+    Validate.notNull(new FileSystemXmlConfig(properties.getProperty(HazelcastXMLConfigFileName)),
       s"'$HazelcastXMLConfigFileName' property can not be null.")
     Validate.notBlank(properties.getProperty(HazelcastDistributedObjectName),
       s"'$HazelcastDistributedObjectName' property can not be blank.")

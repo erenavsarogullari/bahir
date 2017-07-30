@@ -17,6 +17,7 @@
 
 package org.apache.spark.streaming.hazelcast.util
 
+import java.io.File
 import java.util.Properties
 
 import org.apache.spark.streaming.hazelcast.DistributedObjectType.DistributedObjectType
@@ -24,7 +25,8 @@ import org.apache.spark.streaming.hazelcast.SparkHazelcastConstants._
 
 private[hazelcast] object SparkHazelcastSuiteUtils {
 
-  val HazelcastXMLFileName = "hazelcast_test_config.xml"
+  val HazelcastXMLFileName =
+    new File("src/test/resources/hazelcast_test_config.xml").getAbsolutePath()
 
   def getExpectedTupleList(count: Int): List[(Int, String)] =
                                                 (1 to count).map(i => (i, s"test_value_$i")).toList

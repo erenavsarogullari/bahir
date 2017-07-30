@@ -7,14 +7,14 @@ A library for reading data from [Hazelcast](https://hazelcast.org/) using Spark 
 
 Using SBT:
 
-    libraryDependencies += "org.apache.bahir" %% "spark-streaming-hazelcast" % "2.1.0-SNAPSHOT"
+    libraryDependencies += "org.apache.bahir" %% "spark-streaming-hazelcast" % "2.2.0-SNAPSHOT"
 
 Using Maven:
 
     <dependency>
         <groupId>org.apache.bahir</groupId>
         <artifactId>spark-streaming-hazelcast_2.11</artifactId>
-        <version>2.1.0-SNAPSHOT</version>
+        <version>2.2.0-SNAPSHOT</version>
     </dependency>
 
 This library can also be added to Spark jobs launched through `spark-shell` or `spark-submit` by using the `--packages` command line option.
@@ -41,7 +41,7 @@ Create Hazelcast Entry Streams. Supported distributed data structures are IMap, 
     properties.put("hazelcast.distributed.object.name", "test_distributed_map_name")
     properties.put("hazelcast.distributed.object.type", DistributedObjectType.IMap)
     
-    val lines = HazelcastUtils.createHazelcastEntryStream[K, V](ssc, properties, ...)
+    val entries = HazelcastUtils.createHazelcastEntryStream[K, V](ssc, properties, ...)
     
 Create Hazelcast Item Streams. Supported distributed data structures are IList, ISet and IQueue.
 
@@ -52,7 +52,7 @@ Create Hazelcast Item Streams. Supported distributed data structures are IList, 
     properties.put("hazelcast.distributed.object.name", "test_distributed_list_name")
     properties.put("hazelcast.distributed.object.type", DistributedObjectType.IList)
     
-    val lines = HazelcastUtils.createHazelcastEntryStream[K, V](ssc, properties, ...)
+    val items = HazelcastUtils.createHazelcastItemStream[T](ssc, properties, ...)
     
 Create Hazelcast Message Streams. Supported distributed data structures are ITopic and ReliableTopic.
 
@@ -63,7 +63,7 @@ Create Hazelcast Message Streams. Supported distributed data structures are ITop
     properties.put("hazelcast.distributed.object.name", "test_distributed_topic_name")
     properties.put("hazelcast.distributed.object.type", DistributedObjectType.ITopic)
     
-    val lines = HazelcastUtils.createHazelcastEntryStream[K, V](ssc, properties, ...)
+    val messages = HazelcastUtils.createHazelcastMessageStream[T](ssc, properties, ...)
 
 ### Java API
 

@@ -17,7 +17,7 @@
 
 package org.apache.spark.streaming.hazelcast
 
-private[hazelcast] object DistributedObjectType extends Enumeration {
+object DistributedObjectType extends Enumeration {
   type DistributedObjectType = Value
   val IMap, MultiMap, ReplicatedMap,
       IList, ISet, IQueue, ITopic, ReliableTopic = Value

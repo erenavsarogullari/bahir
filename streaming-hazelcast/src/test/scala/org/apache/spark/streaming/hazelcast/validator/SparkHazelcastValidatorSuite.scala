@@ -17,22 +17,26 @@
 
 package org.apache.spark.streaming.hazelcast.validator
 
+import java.io.FileNotFoundException
 import java.util.Properties
 
-import com.hazelcast.config.ClasspathXmlConfig
+import com.hazelcast.config.FileSystemXmlConfig
 import com.hazelcast.core.{Hazelcast, HazelcastInstance}
 
 import org.apache.spark.SparkFunSuite
+
 import org.apache.spark.streaming.hazelcast.DistributedEventType
 import org.apache.spark.streaming.hazelcast.SparkHazelcastConstants._
 
 class SparkHazelcastValidatorSuite extends SparkFunSuite {
 
+  private val HazelcastXMLConfigFile = "src/test/resources/hazelcast_test_config.xml"
   private var hazelcastInstance: HazelcastInstance = _
 
   override def beforeAll() {
-    hazelcastInstance = Hazelcast.getOrCreateHazelcastInstance(
-                                                new ClasspathXmlConfig("hazelcast_test_config.xml"))
+    hazelcastInstance =
+      Hazelcast.getOrCreateHazelcastInstance(
+        new FileSystemXmlConfig("src/test/resources/hazelcast_test_config.xml"))
   }
 
   override def afterAll() {
@@ -54,17 +58,17 @@ class SparkHazelcastValidatorSuite extends SparkFunSuite {
     val properties = new Properties()
     properties.put(HazelcastXMLConfigFileName, "nonexistent_hazelcast_test_config.xml")
 
-    val ex = intercept[IllegalArgumentException] {
+    val ex = intercept[FileNotFoundException] {
       SparkHazelcastValidator.validateProperties(properties)
     }
 
     assert(ex.getMessage ==
-                  "Specified resource 'nonexistent_hazelcast_test_config.xml' could not be found!")
+                  "nonexistent_hazelcast_test_config.xml (No such file or directory)")
   }
 
   test("Validate properties when 'hazelcast.distributed.object.name' property is set as empty.") {
     val properties = new Properties()
-    properties.put(HazelcastXMLConfigFileName, "hazelcast_test_config.xml")
+    properties.put(HazelcastXMLConfigFileName, HazelcastXMLConfigFile)
     properties.put(HazelcastDistributedObjectName, "")
 
     val ex = intercept[IllegalArgumentException] {
@@ -76,7 +80,7 @@ class SparkHazelcastValidatorSuite extends SparkFunSuite {
 
   test("Validate properties when 'hazelcast.distributed.object.type' property is set as empty.") {
     val properties = new Properties()
-    properties.put(HazelcastXMLConfigFileName, "hazelcast_test_config.xml")
+    properties.put(HazelcastXMLConfigFileName, HazelcastXMLConfigFile)
     properties.put(HazelcastDistributedObjectName, "test_distributed_map")
     properties.put(HazelcastDistributedObjectType, "")
 
