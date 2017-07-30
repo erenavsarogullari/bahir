@@ -26,6 +26,7 @@ import org.apache.spark.{SparkConf, SparkContext}
 import org.apache.spark.storage.StorageLevel
 import org.apache.spark.streaming.{Seconds, StreamingContext}
 import org.apache.spark.streaming.hazelcast.SparkHazelcastConstants._
+import org.apache.spark.streaming.hazelcast.dstream.HazelcastInputDStream
 
 private object WriteDistributedItemToDStream {
 
@@ -49,11 +50,12 @@ private object WriteDistributedItemToDStream {
     sparkHazelcastProperties.put(HazelcastDistributedObjectType, DistributedObjectType.IList)
 
     // Distributed List Events are written to Spark as the DStream...
-    val hzListStream = HazelcastUtils.createHazelcastItemStream[User](ssc,
-                                                                    StorageLevel.MEMORY_ONLY,
-                                                                    sparkHazelcastProperties,
-                                                                    Set(DistributedEventType.Added,
-                                                                    DistributedEventType.Removed))
+    val hzListStream: HazelcastInputDStream[User] =
+      HazelcastUtils.createHazelcastItemStream[User](ssc,
+                                                      StorageLevel.MEMORY_ONLY,
+                                                      sparkHazelcastProperties,
+                                                      Set(DistributedEventType.Added,
+                                                      DistributedEventType.Removed))
 
     // Prints stream content...
     hzListStream.print(20)

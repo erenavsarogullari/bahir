@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.apache.spark.streaming.hazelcast
+package org.apache.spark.streaming.hazelcast.dstream
 
 import java.util.Properties
 
@@ -26,11 +26,12 @@ import com.hazelcast.query.Predicate
 import org.apache.spark.storage.StorageLevel
 import org.apache.spark.streaming.StreamingContext
 import org.apache.spark.streaming.dstream.ReceiverInputDStream
+import org.apache.spark.streaming.hazelcast.DistributedEventType
 import org.apache.spark.streaming.hazelcast.DistributedEventType.DistributedEventType
 import org.apache.spark.streaming.hazelcast.validator.SparkHazelcastValidator
 import org.apache.spark.streaming.receiver.Receiver
 
-private[hazelcast] class HazelcastPairInputDStream[K, V](ssc: StreamingContext,
+class HazelcastPairInputDStream[K, V](ssc: StreamingContext,
                                        storageLevel: StorageLevel,
                                        properties: Properties,
                                        distributedEventTypes: Set[DistributedEventType],
@@ -140,7 +141,8 @@ private class HazelcastPairReceiver[K, V](storageLevel: StorageLevel,
     }
 
     private def store(event: EntryEvent[K, V]) {
-      if (distributedEventTypes.contains(DistributedEventType.withName(event.getEventType.name())
+      if (distributedEventTypes.contains(
+        DistributedEventType.withName(event.getEventType.name().toLowerCase.capitalize)
       )) {
         receiver.store((event.getMember.getAddress.toString,
           event.getEventType.name(), event.getKey, event.getOldValue, event.getValue))

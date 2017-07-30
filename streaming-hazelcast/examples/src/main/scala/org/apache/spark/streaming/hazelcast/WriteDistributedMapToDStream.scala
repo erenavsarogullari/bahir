@@ -26,6 +26,7 @@ import org.apache.spark.{SparkConf, SparkContext}
 import org.apache.spark.storage.StorageLevel
 import org.apache.spark.streaming.{Seconds, StreamingContext}
 import org.apache.spark.streaming.hazelcast.SparkHazelcastConstants._
+import org.apache.spark.streaming.hazelcast.dstream.HazelcastPairInputDStream
 
 private object WriteDistributedMapToDStream {
 
@@ -49,12 +50,13 @@ private object WriteDistributedMapToDStream {
     sparkHazelcastProperties.put(HazelcastDistributedObjectType, DistributedObjectType.IMap)
 
     // Distributed Map Events are written to Spark as the DStream...
-    val hzMapStream = HazelcastUtils.createHazelcastEntryStream[Integer, String](ssc,
-                                                                  StorageLevel.MEMORY_ONLY,
-                                                                  sparkHazelcastProperties,
-                                                                  Set(DistributedEventType.Added,
-                                                                      DistributedEventType.Updated,
-                                                                      DistributedEventType.Removed))
+    val hzMapStream: HazelcastPairInputDStream[Int, String] =
+      HazelcastUtils.createHazelcastEntryStream[Int, String](ssc,
+                                                              StorageLevel.MEMORY_ONLY,
+                                                              sparkHazelcastProperties,
+                                                              Set(DistributedEventType.Added,
+                                                                  DistributedEventType.Updated,
+                                                                  DistributedEventType.Removed))
 
     // Prints stream content...
     hzMapStream.print(20)

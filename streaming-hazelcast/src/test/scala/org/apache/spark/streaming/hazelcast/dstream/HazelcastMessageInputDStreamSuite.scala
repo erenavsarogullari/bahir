@@ -15,22 +15,23 @@
  * limitations under the License.
  */
 
-package org.apache.spark.streaming.hazelcast
+package org.apache.spark.streaming.hazelcast.dstream
 
 import java.util.Properties
 import java.util.concurrent.CountDownLatch
 
-import com.hazelcast.core.{ICollection, IList, IQueue, ISet}
+import com.hazelcast.core.ITopic
 import org.apache.commons.lang3.StringUtils
 import org.scalatest.BeforeAndAfter
 
 import org.apache.spark.storage.StorageLevel
+import org.apache.spark.streaming.hazelcast.{DistributedObjectType, HazelcastUtils}
 import org.apache.spark.streaming.hazelcast.DistributedObjectType.DistributedObjectType
 import org.apache.spark.streaming.hazelcast.config.SparkHazelcastService
 import org.apache.spark.streaming.hazelcast.util.SparkHazelcastSuite
 import org.apache.spark.streaming.hazelcast.util.SparkHazelcastSuiteUtils._
 
-class HazelcastInputDStreamSuite extends SparkHazelcastSuite with BeforeAndAfter {
+class HazelcastMessageInputDStreamSuite extends SparkHazelcastSuite with BeforeAndAfter {
 
   before {
     startStreamingContext()
@@ -40,16 +41,12 @@ class HazelcastInputDStreamSuite extends SparkHazelcastSuite with BeforeAndAfter
     stopStreamingContext()
   }
 
-  test("A Distributed List having 10 integers should be written to Spark as DStream") {
-    test(DistributedObjectType.IList, "test_distributed_list4", 10)
+  test("A Topic having 20 integers should be written to Spark as DStream") {
+    test(DistributedObjectType.ITopic, "test_topic4", 20)
   }
 
-  test("A Distributed Set having 15 integers should be written to Spark as DStream") {
-    test(DistributedObjectType.ISet, "test_distributed_set4", 15)
-  }
-
-  test("A Distributed Queue having 20 integers should be written to Spark as DStream") {
-    test(DistributedObjectType.IQueue, "test_distributed_queue4", 20)
+  test("A Reliable Topic having 30 integers should be written to Spark as DStream") {
+    test(DistributedObjectType.ReliableTopic, "test_reliableTopic4", 30)
   }
 
   private def test(distributedObjectType: DistributedObjectType,
@@ -59,52 +56,51 @@ class HazelcastInputDStreamSuite extends SparkHazelcastSuite with BeforeAndAfter
 
     val properties = getProperties(distributedObjectType, distributedObjectName)
 
-    new Thread(new HazelcastItemLoader[Int](properties, expectedList)).start()
+    new Thread(new HazelcastMessageLoader[Int](properties, expectedList)).start()
 
     val latch = new CountDownLatch(expectedList.size)
 
-    val hazelcastItemStream = HazelcastUtils.createHazelcastItemStream[Int](ssc,
-                                                              StorageLevel.MEMORY_ONLY, properties)
+    val hazelcastMessageStream = HazelcastUtils
+                                      .createHazelcastMessageStream[Int](ssc,
+                                                                          StorageLevel.MEMORY_ONLY,
+                                                                          properties)
 
-    verify[Int](hazelcastItemStream, expectedList, latch)
+    verify[Int](hazelcastMessageStream, expectedList, latch)
 
     ssc.start()
 
     latch.await()
   }
 
-  private def verify[T](hazelcastItemStream: HazelcastInputDStream[T], expectedList: List[T],
+  private def verify[T](hazelcastMessageStream: HazelcastInputDStream[T],
+                        expectedList: List[T],
                         latch: CountDownLatch): Unit = {
-    hazelcastItemStream.foreachRDD(rdd => {
+    hazelcastMessageStream.foreachRDD(rdd => {
       rdd.collect().foreach {
         case(memberAddress, eventType, item) =>
-        assert(StringUtils.isNotBlank(memberAddress))
-        assert(StringUtils.isNotBlank(eventType))
-        assert(expectedList.contains(item))
+          assert(StringUtils.isNotBlank(memberAddress))
+          assert(StringUtils.isNotBlank(eventType))
+          assert(expectedList.contains(item))
       }
       latch.countDown()
     })
   }
 
-  private class HazelcastItemLoader[T](properties: Properties, expectedList: List[T])
+  private class HazelcastMessageLoader[T](properties: Properties, expectedList: List[T])
     extends Runnable {
 
     override def run(): Unit = {
       val distributedObject = SparkHazelcastService.getDistributedObject(properties)
       distributedObject match {
-        case hzList: IList[T] => addItems(hzList, expectedList)
-        case hzSet: ISet[T] => addItems(hzSet, expectedList)
-        case hzQueue: IQueue[T] => addItems(hzQueue, expectedList)
-        case distObj: Any => fail(s"Expected Distributed Object Types : [IList, ISet and IQueue]" +
-          s" but ${distObj.getName} found!")
-      }
-    }
+        case hzTopic: ITopic[T] =>
+          expectedList.foreach(message => {
+            hzTopic.publish(message)
+            Thread.sleep(BatchDuration)
+          })
 
-    private def addItems(hzCollection: ICollection[T], expectedList: List[T]): Unit = {
-      expectedList.foreach(item => {
-        hzCollection.add(item)
-        Thread.sleep(BatchDuration)
-      })
+        case distObj: Any => fail(s"Expected Distributed Object Types : [ITopic] " +
+          s"but ${distObj.getName} found!")
+      }
     }
 
   }

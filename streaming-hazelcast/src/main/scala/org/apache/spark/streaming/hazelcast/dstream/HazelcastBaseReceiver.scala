@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.apache.spark.streaming.hazelcast
+package org.apache.spark.streaming.hazelcast.dstream
 
 import java.util.Properties
 
@@ -23,7 +23,7 @@ import com.hazelcast.core.DistributedObject
 
 import org.apache.spark.streaming.hazelcast.config.SparkHazelcastService
 
-private[hazelcast] trait HazelcastBaseReceiver {
+private[dstream] trait HazelcastBaseReceiver {
 
   protected val props: Properties
 

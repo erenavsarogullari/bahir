@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.apache.spark.streaming.hazelcast
+package org.apache.spark.streaming.hazelcast.dstream
 
 import java.util.Properties
 import java.util.concurrent.CountDownLatch
@@ -25,6 +25,7 @@ import org.apache.commons.lang3.StringUtils
 import org.scalatest.BeforeAndAfter
 
 import org.apache.spark.storage.StorageLevel
+import org.apache.spark.streaming.hazelcast.{DistributedEventType, DistributedObjectType, HazelcastUtils}
 import org.apache.spark.streaming.hazelcast.DistributedEventType.DistributedEventType
 import org.apache.spark.streaming.hazelcast.DistributedObjectType.DistributedObjectType
 import org.apache.spark.streaming.hazelcast.config.SparkHazelcastService

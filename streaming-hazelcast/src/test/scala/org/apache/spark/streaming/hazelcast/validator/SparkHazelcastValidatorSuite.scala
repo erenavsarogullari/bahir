@@ -23,10 +23,9 @@ import java.util.Properties
 import com.hazelcast.config.FileSystemXmlConfig
 import com.hazelcast.core.{Hazelcast, HazelcastInstance}
 
-import org.apache.spark.SparkFunSuite
-
 import org.apache.spark.streaming.hazelcast.DistributedEventType
 import org.apache.spark.streaming.hazelcast.SparkHazelcastConstants._
+import org.apache.spark.SparkFunSuite
 
 class SparkHazelcastValidatorSuite extends SparkFunSuite {
 

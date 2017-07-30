@@ -24,6 +24,8 @@ import com.hazelcast.query.Predicate
 import org.apache.spark.storage.StorageLevel
 import org.apache.spark.streaming.StreamingContext
 import org.apache.spark.streaming.hazelcast.DistributedEventType.DistributedEventType
+import org.apache.spark.streaming.hazelcast.dstream.
+{HazelcastInputDStream, HazelcastPairInputDStream}
 
 object HazelcastUtils {
 
