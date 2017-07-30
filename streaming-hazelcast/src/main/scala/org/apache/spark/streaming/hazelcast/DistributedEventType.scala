@@ -19,5 +19,5 @@ package org.apache.spark.streaming.hazelcast
 
 object DistributedEventType extends Enumeration {
   type DistributedEventType = Value
-  val ADDED, REMOVED, UPDATED, EVICTED = Value
+  val Added, Removed, Updated, Evicted = Value
 }

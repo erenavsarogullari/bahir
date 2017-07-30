@@ -45,7 +45,7 @@ object HazelcastUtils {
                                        storageLevel: StorageLevel = StorageLevel.MEMORY_ONLY,
                                        properties: Properties,
                                        distributedEventTypes: Set[DistributedEventType]
-                                       = Set(DistributedEventType.ADDED),
+                                       = Set(DistributedEventType.Added),
                                        predicate: Option[Predicate[K, V]] = None,
                                        key: Option[K] = None): HazelcastPairInputDStream[K, V] = {
 
@@ -74,7 +74,7 @@ object HazelcastUtils {
                                    storageLevel: StorageLevel = StorageLevel.MEMORY_ONLY,
                                    properties: Properties,
                                    distributedEventTypes: Set[DistributedEventType]
-                                   = Set(DistributedEventType.ADDED)): HazelcastInputDStream[T] = {
+                                   = Set(DistributedEventType.Added)): HazelcastInputDStream[T] = {
 
     new HazelcastInputDStream[T](ssc, storageLevel, properties, distributedEventTypes)
 

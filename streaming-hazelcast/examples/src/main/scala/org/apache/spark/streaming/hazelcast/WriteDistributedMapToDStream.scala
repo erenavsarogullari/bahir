@@ -52,9 +52,9 @@ private object WriteDistributedMapToDStream {
     val hzMapStream = HazelcastUtils.createHazelcastEntryStream[Integer, String](ssc,
                                                                   StorageLevel.MEMORY_ONLY,
                                                                   sparkHazelcastProperties,
-                                                                  Set(DistributedEventType.ADDED,
-                                                                      DistributedEventType.UPDATED,
-                                                                      DistributedEventType.REMOVED))
+                                                                  Set(DistributedEventType.Added,
+                                                                      DistributedEventType.Updated,
+                                                                      DistributedEventType.Removed))
 
     // Prints stream content...
     hzMapStream.print(20)

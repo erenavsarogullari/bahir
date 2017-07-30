@@ -52,8 +52,8 @@ private object WriteDistributedItemToDStream {
     val hzListStream = HazelcastUtils.createHazelcastItemStream[User](ssc,
                                                                     StorageLevel.MEMORY_ONLY,
                                                                     sparkHazelcastProperties,
-                                                                    Set(DistributedEventType.ADDED,
-                                                                    DistributedEventType.REMOVED))
+                                                                    Set(DistributedEventType.Added,
+                                                                    DistributedEventType.Removed))
 
     // Prints stream content...
     hzListStream.print(20)

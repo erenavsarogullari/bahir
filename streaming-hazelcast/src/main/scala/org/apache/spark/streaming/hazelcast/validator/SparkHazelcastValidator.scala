@@ -31,14 +31,14 @@ import org.apache.spark.streaming.hazelcast.SparkHazelcastConstants._
 private[hazelcast] object SparkHazelcastValidator {
 
   val supportedDistributedEventTypesOfMaps: Set[DistributedEventType] =
-    Set(DistributedEventType.ADDED,
-        DistributedEventType.REMOVED,
-        DistributedEventType.UPDATED,
-        DistributedEventType.EVICTED)
+    Set(DistributedEventType.Added,
+        DistributedEventType.Removed,
+        DistributedEventType.Updated,
+        DistributedEventType.Evicted)
 
   val supportedDistributedEventTypes: Set[DistributedEventType] =
-    Set(DistributedEventType.ADDED,
-        DistributedEventType.REMOVED)
+    Set(DistributedEventType.Added,
+        DistributedEventType.Removed)
 
   def validateProperties(properties: Properties) {
     Validate.notBlank(properties.getProperty(HazelcastXMLConfigFileName),

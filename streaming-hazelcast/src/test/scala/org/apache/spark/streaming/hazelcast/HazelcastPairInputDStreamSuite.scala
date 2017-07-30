@@ -57,9 +57,9 @@ class HazelcastPairInputDStreamSuite extends SparkHazelcastSuite with BeforeAndA
                    distributedObjectName: String,
                    expectedMessageCount: Int,
                    distributedEventTypes: Set[DistributedEventType] =
-                      Set(DistributedEventType.ADDED,
-                          DistributedEventType.REMOVED,
-                          DistributedEventType.UPDATED)) {
+                      Set(DistributedEventType.Added,
+                          DistributedEventType.Removed,
+                          DistributedEventType.Updated)) {
     val expectedTupleList = getExpectedTupleList(expectedMessageCount)
 
     val properties = getProperties(distributedObjectType, distributedObjectName)
@@ -83,7 +83,7 @@ class HazelcastPairInputDStreamSuite extends SparkHazelcastSuite with BeforeAndA
                            expectedTupleList: List[(K, V)],
                            latch: CountDownLatch,
                            distributedEventTypes: Set[DistributedEventType] = Set
-                           (DistributedEventType.ADDED)) {
+                           (DistributedEventType.Added)) {
     hazelcastEntryStream.foreachRDD(rdd => {
       rdd.collect().foreach {
         case(memberAddress, eventType, key, oldValue, value) =>

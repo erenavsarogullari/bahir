@@ -96,7 +96,7 @@ class SparkHazelcastValidatorSuite extends SparkFunSuite {
                                                                                 "is not matched.") {
     val ex = intercept[IllegalStateException] {
       SparkHazelcastValidator.validateDistributedEventTypesOfMap(
-          hazelcastInstance.getList("test_hz_distributed_list"), Set(DistributedEventType.UPDATED))
+          hazelcastInstance.getList("test_hz_distributed_list"), Set(DistributedEventType.Updated))
     }
 
     assert(ex.getMessage == "Expected Distributed Object Types : [IMap, MultiMap and " +
@@ -110,14 +110,15 @@ class SparkHazelcastValidatorSuite extends SparkFunSuite {
     }
 
     assert(ex.getMessage == "'distributedEventTypes' can not be empty. Supported values: " +
-                                                            "[ADDED, REMOVED, UPDATED, EVICTED]")
+                            s"[${DistributedEventType.Added}, ${DistributedEventType.Removed}, " +
+                            s"${DistributedEventType.Updated}, ${DistributedEventType.Evicted}]")
   }
 
   test("Validate DistributedEventTypes for Map Structure when event set contains null element.") {
     val ex = intercept[IllegalArgumentException] {
       SparkHazelcastValidator
         .validateDistributedEventTypesOfMap(hazelcastInstance.getMap("test_hz_distributed_map"),
-                                            Set(DistributedEventType.UPDATED, null))
+                                            Set(DistributedEventType.Updated, null))
     }
 
     assert(ex.getMessage == "'distributedEventTypes' can not contain null element.")
@@ -128,7 +129,7 @@ class SparkHazelcastValidatorSuite extends SparkFunSuite {
     val ex = intercept[IllegalStateException] {
       SparkHazelcastValidator
         .validateDistributedEventTypes(hazelcastInstance.getMap("test_hz_distributed_map"),
-                                        Set(DistributedEventType.ADDED))
+                                        Set(DistributedEventType.Added))
     }
 
     assert(ex.getMessage == "Expected Distributed Object Types : [IList, ISet and IQueue] " +
@@ -141,8 +142,8 @@ class SparkHazelcastValidatorSuite extends SparkFunSuite {
         .validateDistributedEventTypes(hazelcastInstance.getList("test_hz_distributed_list"), Set())
     }
 
-    assert(ex.getMessage == "'distributedEventTypes' can not be empty. " +
-                                                            "Supported values: [ADDED, REMOVED]")
+    assert(ex.getMessage == "'distributedEventTypes' can not be empty. Supported values: " +
+      s"[${DistributedEventType.Added}, ${DistributedEventType.Removed}]")
   }
 
   test("Validate DistributedEventTypes for Distributed List/Set/Queue " +
@@ -150,7 +151,7 @@ class SparkHazelcastValidatorSuite extends SparkFunSuite {
     val ex = intercept[IllegalArgumentException] {
       SparkHazelcastValidator
         .validateDistributedEventTypes(hazelcastInstance.getList("test_hz_distributed_list"),
-                                        Set(DistributedEventType.ADDED, null))
+                                        Set(DistributedEventType.Added, null))
     }
 
     assert(ex.getMessage == "'distributedEventTypes' can not contain null element.")
@@ -161,11 +162,11 @@ class SparkHazelcastValidatorSuite extends SparkFunSuite {
     val ex = intercept[IllegalArgumentException] {
       SparkHazelcastValidator
         .validateDistributedEventTypes(hazelcastInstance.getList("test_hz_distributed_list"),
-                                        Set(DistributedEventType.UPDATED))
+                                        Set(DistributedEventType.Updated))
     }
 
-    assert(ex.getMessage == "Expected Distributed Event Types: " +
-                              "[ADDED, REMOVED] but UPDATED found!")
+    assert(ex.getMessage == s"Expected Distributed Event Types: [${DistributedEventType.Added}, " +
+      s"${DistributedEventType.Removed}] but Updated found!")
   }
 
 }
