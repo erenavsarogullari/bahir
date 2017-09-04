@@ -7,20 +7,20 @@ A library for reading data from [Hazelcast](https://hazelcast.org/) using Spark 
 
 Using SBT:
 
-    libraryDependencies += "org.apache.bahir" %% "spark-streaming-hazelcast" % "2.2.0-SNAPSHOT"
+    libraryDependencies += "org.apache.bahir" %% "spark-streaming-hazelcast" % "2.3.0-SNAPSHOT"
 
 Using Maven:
 
     <dependency>
         <groupId>org.apache.bahir</groupId>
         <artifactId>spark-streaming-hazelcast_2.11</artifactId>
-        <version>2.2.0-SNAPSHOT</version>
+        <version>2.3.0-SNAPSHOT</version>
     </dependency>
 
 This library can also be added to Spark jobs launched through `spark-shell` or `spark-submit` by using the `--packages` command line option.
 For example, to include it when starting the spark shell:
 
-    $ bin/spark-shell --packages org.apache.bahir:spark-streaming-hazelcast_2.11:2.1.0-SNAPSHOT
+    $ bin/spark-shell --packages org.apache.bahir:spark-streaming-hazelcast_2.11:2.3.0-SNAPSHOT
 
 Unlike using `--jars`, using `--packages` ensures that this library and its dependencies will be added to the classpath.
 The `--packages` argument can also be used with `bin/spark-submit`.
@@ -41,7 +41,7 @@ Create Hazelcast Entry Streams. Supported distributed data structures are IMap, 
     properties.put("hazelcast.distributed.object.name", "test_distributed_map_name")
     properties.put("hazelcast.distributed.object.type", DistributedObjectType.IMap)
     
-    val entries = HazelcastUtils.createHazelcastEntryStream[K, V](ssc, properties, ...)
+    val entries: HazelcastPairInputDStream[Int, String] = HazelcastUtils.createHazelcastEntryStream[Int, String](ssc, properties, ...)
     
 Create Hazelcast Item Streams. Supported distributed data structures are IList, ISet and IQueue.
 
@@ -52,7 +52,7 @@ Create Hazelcast Item Streams. Supported distributed data structures are IList, 
     properties.put("hazelcast.distributed.object.name", "test_distributed_list_name")
     properties.put("hazelcast.distributed.object.type", DistributedObjectType.IList)
     
-    val items = HazelcastUtils.createHazelcastItemStream[T](ssc, properties, ...)
+    val items: HazelcastInputDStream[User] = HazelcastUtils.createHazelcastItemStream[User](ssc, properties, ...)
     
 Create Hazelcast Message Streams. Supported distributed data structures are ITopic and ReliableTopic.
 
@@ -63,7 +63,7 @@ Create Hazelcast Message Streams. Supported distributed data structures are ITop
     properties.put("hazelcast.distributed.object.name", "test_distributed_topic_name")
     properties.put("hazelcast.distributed.object.type", DistributedObjectType.ITopic)
     
-    val messages = HazelcastUtils.createHazelcastMessageStream[T](ssc, properties, ...)
+    val messages: HazelcastInputDStream[User] = HazelcastUtils.createHazelcastMessageStream[User](ssc, properties, ...)
 
 ### Java API
 

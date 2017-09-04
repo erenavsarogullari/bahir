@@ -62,7 +62,7 @@ private[hazelcast] object SparkHazelcastService {
         hazelcastInstance.getTopic(hazelcastDistributedObjectName)
       case DistributedObjectType.ReliableTopic =>
         hazelcastInstance.getReliableTopic(hazelcastDistributedObjectName)
-      case distObj: Any => throw new IllegalStateException(s"Expected Distributed Object Types : " +
+      case _ => throw new IllegalStateException(s"Expected Distributed Object Types : " +
         s"[IMap, MultiMap, ReplicatedMap, IList, ISet and IQueue, ITopic and ReliableTopic] but " +
           s"$hazelcastDistributedObjectName found!")
     }
