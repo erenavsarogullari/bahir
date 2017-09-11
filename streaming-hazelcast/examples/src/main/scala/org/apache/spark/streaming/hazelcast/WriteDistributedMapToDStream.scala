@@ -19,7 +19,7 @@ package org.apache.spark.streaming.hazelcast
 
 import java.util.Properties
 
-import com.hazelcast.config.ClasspathXmlConfig
+import com.hazelcast.config.FileSystemXmlConfig
 import com.hazelcast.core.{Hazelcast, IMap}
 
 import org.apache.spark.{SparkConf, SparkContext}
@@ -32,6 +32,7 @@ private object WriteDistributedMapToDStream {
 
   val HazelcastXMLFileName = "hazelcast_config.xml"
   val HazelcastDistributedMapName = "test_distributed_map"
+  val HazelcastXMLFilePath = getClass().getClassLoader().getResource(HazelcastXMLFileName).getPath()
 
   def main(args: Array[String]) {
 
@@ -45,7 +46,7 @@ private object WriteDistributedMapToDStream {
 
     // Spark Hazelcast properties are created...
     val sparkHazelcastProperties = new Properties()
-    sparkHazelcastProperties.put(HazelcastXMLConfigFileName, HazelcastXMLFileName)
+    sparkHazelcastProperties.put(HazelcastXMLConfigFileName, HazelcastXMLFilePath)
     sparkHazelcastProperties.put(HazelcastDistributedObjectName, HazelcastDistributedMapName)
     sparkHazelcastProperties.put(HazelcastDistributedObjectType, DistributedObjectType.IMap)
 
@@ -71,7 +72,7 @@ private object WriteDistributedMapToDStream {
     override def run(): Unit = {
       // Distributed Map is created with stream content...
       val hzInstance = Hazelcast.getOrCreateHazelcastInstance(
-                                                      new ClasspathXmlConfig(HazelcastXMLFileName))
+                                                      new FileSystemXmlConfig(HazelcastXMLFilePath))
       val distributedMap: IMap[Int, User] = hzInstance.getMap(HazelcastDistributedMapName)
       (1 to 1000).foreach(index => {
         Thread.sleep(1000)

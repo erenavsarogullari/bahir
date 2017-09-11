@@ -19,7 +19,7 @@ package org.apache.spark.streaming.hazelcast
 
 import java.util.Properties
 
-import com.hazelcast.config.ClasspathXmlConfig
+import com.hazelcast.config.{FileSystemXmlConfig}
 import com.hazelcast.core.{Hazelcast, IList}
 
 import org.apache.spark.{SparkConf, SparkContext}
@@ -32,6 +32,7 @@ private object WriteDistributedItemToDStream {
 
   val HazelcastXMLFileName = "hazelcast_config.xml"
   val HazelcastDistributedListName = "test_distributed_list"
+  val HazelcastXMLFilePath = getClass().getClassLoader().getResource(HazelcastXMLFileName).getPath()
 
   def main(args: Array[String]) {
     // Hazelcast Distributed Item Events Stream is started...
@@ -45,7 +46,7 @@ private object WriteDistributedItemToDStream {
 
     // Spark Hazelcast properties are created...
     val sparkHazelcastProperties = new Properties()
-    sparkHazelcastProperties.put(HazelcastXMLConfigFileName, HazelcastXMLFileName)
+    sparkHazelcastProperties.put(HazelcastXMLConfigFileName, HazelcastXMLFilePath)
     sparkHazelcastProperties.put(HazelcastDistributedObjectName, HazelcastDistributedListName)
     sparkHazelcastProperties.put(HazelcastDistributedObjectType, DistributedObjectType.IList)
 
@@ -70,7 +71,7 @@ private object WriteDistributedItemToDStream {
     override def run(): Unit = {
       // Distributed List is created with stream content...
       val hzInstance = Hazelcast.getOrCreateHazelcastInstance(
-                                                      new ClasspathXmlConfig(HazelcastXMLFileName))
+                                                      new FileSystemXmlConfig(HazelcastXMLFilePath))
       val distributedList: IList[User] = hzInstance.getList(HazelcastDistributedListName)
       (1 to 1000).foreach(index => {
         Thread.sleep(1000)
